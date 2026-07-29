@@ -67,10 +67,10 @@ def get_hana_connection():
     else:
         # Local fallback testing credentials
         conn = dbapi.connect(
-            address="b23d86ce-c107-441b-ac69-e644ddef28e6.hna1.prod-us10.hanacloud.ondemand.com",
+            address="",
             port=443,
             user="DBADMIN",
-            password="Shriganesha@24"
+            password=""
         )
        
         # Explicitly set your local workspace schema

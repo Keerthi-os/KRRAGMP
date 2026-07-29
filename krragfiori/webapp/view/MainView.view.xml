@@ -1,0 +1,49 @@
+<mvc:View controllerName="krragfiori.controller.MainView"
+    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"
+    xmlns="sap.m"
+    xmlns:u="sap.ui.unified"
+    xmlns:layout="sap.ui.layout">
+    <Page id="page" title="{i18n>title}">
+        <content>
+                <HBox id="hb3" width="100%" alignContent="SpaceBetween">
+                    <items>
+                        <!-- LEFT PANEL: FILE UPLOAD MANAGEMENT -->
+                        <VBox id="vb2" class="sapUiResponsiveMargin sapUiLargeBorder" alignContent="Start">
+                            <layoutData>
+                                <FlexItemData id="FID1" growFactor="2.8" baseSize="0%" />
+                            </layoutData>
+                            <items>
+                                <Title id="title1" text="Data Source Ingestion" level="H2" class="sapUiSmallMarginBottom" />
+                                <Text id="text1" text="Upload localized document knowledge bases natively into the SAP HANA Cloud Vector Engine." class="sapUiSmallMarginBottom" />
+                                <u:FileUploader id="fileUploader" name="file" uploadUrl="/api/v1/ingest" fileType="pdf" width="100%" placeholder="Choose a PDF knowledge document..." uploadOnChange="false" sendXHR="true" useMultipart="true" uploadComplete="onUploadComplete"/>
+                                <Button id = 'b1' text="Ingest into Vector DB" type="Emphasized" icon="sap-icon://upload-to-cloud" press="onUploadPress" class="sapUiSmallMarginTop" width="100%"/>
+                            </items>
+                        </VBox>
+                        <!-- RIGHT PANEL: LIVE CO-PILOT CHAT INTERFACE -->
+                        <VBox id="vb1" class="sapUiResponsiveMargin">
+                            <layoutData>
+                                <FlexItemData id="FID2" growFactor="7.2" baseSize="0%" />
+                            </layoutData>
+                            <items>
+                                <Title id="title2" text="AI Assistant Copilot" level="H2" class="sapUiSmallMarginBottom" />
+                                <!-- Chat Transcript Container Scroll Window -->
+                                <ScrollContainer id="sc1" height="300px" vertical="true" focusable="true" class="sapUiFormBackdrop sapUiTinyMarginBottom">
+                                    <List id="chatList" items="{chatModel>/messages}" noDataText="Ask a context-aware question to get started...">
+                                        <FeedListItem id="FLI1" icon="sap-icon://employee" sender="{chatModel>sender}" text="{chatModel>text}" timestamp="{chatModel>timestamp}" />
+                                    </List>
+                                </ScrollContainer>
+                                <!-- Prompt Entry Box Layout Row -->
+                                <!-- <HBox id="hb1" width="200%" height="200px" alignItems="Start"> -->
+                                <FeedInput id="FI1" post="onSendPrompt" icon="sap-icon://ai" placeholder="Ask Copilot about uploaded documents..." />
+                                <!-- <Input id="promptInput" placeholder="Ask Copilot about uploaded documents..." width="300%" submit="onSendPrompt"/> -->
+                                <!-- <Button id = "b2" icon="sap-icon://paper-plane" type="Emphasized" press="onSendPrompt" class="sapUiTinyMarginBegin"/> -->
+                                <!-- </HBox> -->
+                            </items>
+                        </VBox>
+                    </items>
+                </HBox>
+        </content>
+    </Page>
+</mvc:View>
+ 
+ 

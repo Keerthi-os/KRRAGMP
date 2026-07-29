@@ -1,0 +1,11 @@
+{
+  "name": "krpython1-approuter",
+  "version": "1.0.0",
+  "description": "SAP BTP Cloud Foundry Approuter Module",
+  "scripts": {
+    "start": "node node_modules/@sap/approuter/approuter.js"
+  },
+  "dependencies": {
+    "@sap/approuter": "^11.0.0"
+  }
+}

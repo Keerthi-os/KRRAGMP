@@ -1,0 +1,111 @@
+_schema-version: "3.2"
+ID: KRRAG
+version: 0.0.1
+modules:
+
+- name: KRRAG-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: KRRAG-repo-host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - krragfiori.zip
+      name: krragfiori
+      target-path: resources/
+
+
+- name: krragfiori
+  type: html5
+  path: krragfiori
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+
+
+#This is for Python backend Flask application
+- name: krfastapi
+  type: python
+  path: .
+  properties:
+    FORWARD_URL: ${default-url}
+  provides:
+  - name: srv-url
+    properties:
+      url: ${default-url}
+  requires:
+    - name: krpython1-db-hana
+  parameters:
+    disk-quota: 1024M
+    memory: 256M
+    routes:
+    - route: ${default-url}
+
+
+# This is for approuter service to route requests to the backend
+- name: krpython1-approuter
+  type: approuter.nodejs
+  path: approuter
+  parameters:
+    disk-quota: 512M
+    memory: 256M
+  requires:
+  - name: srv-url
+    group: destinations
+    properties:
+      name: backend-destination
+      url: ~{url}
+      forwardAuthToken: true
+  - name: KRRAG-destination-service     #the destination is automatically generated and is available at resources down
+    group: destinations
+    properties:
+      name: ui5
+      url: https://ui5.sap.com
+  - name: KRRAG-repo-host
+
+resources:
+- name: KRRAG-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: KRRAG-html5-service
+    service-plan: app-host
+
+
+- name: KRRAG-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: KRRAG-destination-service
+    service-plan: lite
+
+# SAP HANA Cloud Instance Service Link
+- name: krpython1-db-hana                  
+  type: org.cloudfoundry.existing-service    # Tells BTP to connect to a service that is already running
+  parameters:
+    service-name: KRHANACLOUD                # Exact match of your instance name (Case-Sensitive)
+
+
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true

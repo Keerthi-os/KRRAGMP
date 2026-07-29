@@ -1,0 +1,16 @@
+{
+  "welcomeFile": "/krragfiori/index.html",
+  "routes": [
+    {
+      "source": "^/api/(.*)$",
+      "target": "/api/$1",
+      "destination": "backend-destination",
+      "authenticationType": "none"
+    },
+    {
+      "source": "^/(.*)$",
+      "target": "/$1",
+      "service": "html5-apps-repo-rt"
+    }
+  ]
+}
